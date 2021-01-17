@@ -1,9 +1,9 @@
+/* eslint-disable no-unused-expressions */
+
 import React from 'react';
 import '../index.css';
 import Board from './board.js';
 import initialiseChessBoard from '../helpers/board-initialiser.js';
-
-/* eslint-disable no-unused-expressions */
 
 
 export default class Game extends React.Component {
@@ -11,8 +11,8 @@ export default class Game extends React.Component {
     super();
     this.state = {
       squares: initialiseChessBoard(),
-      whiteFallenSoldiers: [],
-      blackFallenSoldiers: [],
+      playerOneFallenUnits: [],
+      playerTwoFallenUnits: [],
       player: 1,
       sourceSelection: -1,
       status: '',
@@ -48,8 +48,8 @@ export default class Game extends React.Component {
       else{
         
         const squares = this.state.squares.slice();
-        const whiteFallenSoldiers = this.state.whiteFallenSoldiers.slice();
-        const blackFallenSoldiers = this.state.blackFallenSoldiers.slice();
+        const playerOneFallenUnits = this.state.playerOneFallenUnits.slice();
+        const playerTwoFallenUnits = this.state.playerTwoFallenUnits.slice();
         const isDestEnemyOccupied = squares[i]? true : false; 
         const isMovePossible = squares[this.state.sourceSelection].isMovePossible(this.state.sourceSelection, i, isDestEnemyOccupied);
         const srcToDestPath = squares[this.state.sourceSelection].getSrcToDestPath(this.state.sourceSelection, i);
@@ -58,14 +58,14 @@ export default class Game extends React.Component {
         if(isMovePossible && isMoveLegal){
           if(squares[i] !== null){
             if(squares[i].player === 1){
-              whiteFallenSoldiers.push(squares[i]);
+              playerOneFallenUnits.push(squares[i]);
             }
             else{
-              blackFallenSoldiers.push(squares[i]);
+              playerTwoFallenUnits.push(squares[i]);
             }
           }
-          console.log("whiteFallenSoldiers", whiteFallenSoldiers) ;
-          console.log("blackFallenSoldiers", blackFallenSoldiers);
+          console.log("playerOneFallenUnits", playerOneFallenUnits) ;
+          console.log("playerTwoFallenUnits", playerTwoFallenUnits);
           squares[i] = squares[this.state.sourceSelection];
           squares[this.state.sourceSelection] = null;
           let player = this.state.player === 1? 2: 1;
@@ -73,8 +73,8 @@ export default class Game extends React.Component {
           this.setState({
             sourceSelection: -1,
             squares: squares,
-            whiteFallenSoldiers: whiteFallenSoldiers,
-            blackFallenSoldiers: blackFallenSoldiers,
+            playerOneFallenUnits: playerOneFallenUnits,
+            playerTwoFallenUnits: playerTwoFallenUnits,
             player: player,
             status: '',
             turn: turn
