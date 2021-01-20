@@ -16,7 +16,7 @@ export default class Game extends React.Component {
       player: 1,
       sourceSelection: -1,
       status: '',
-      turn: 'white'
+      turn: 'red'
     }
   }
  
@@ -26,7 +26,7 @@ export default class Game extends React.Component {
     if(this.state.sourceSelection === -1){
       if(!squares[i] || squares[i].player !== this.state.player){
         this.setState({status: "Wrong selection. Choose player " + this.state.player + " pieces."});
-        squares[i]? delete squares[i].style.backgroundColor: null;
+        squares[i]? delete squares[i].style: null;
       }
       else{
         squares[i].style = {...squares[i].style, backgroundColor: "RGB(111,143,114)"}; // Emerald from http://omgchess.blogspot.com/2015/09/chess-board-color-schemes.html
@@ -38,7 +38,7 @@ export default class Game extends React.Component {
     }
 
     else if(this.state.sourceSelection > -1){
-      delete squares[this.state.sourceSelection].style.backgroundColor;
+      delete squares[this.state.sourceSelection].style;
       if(squares[i] && squares[i].player === this.state.player){
         this.setState({
           status: "Wrong selection. Choose valid source and destination again.",
@@ -69,7 +69,7 @@ export default class Game extends React.Component {
           squares[i] = squares[this.state.sourceSelection];
           squares[this.state.sourceSelection] = null;
           let player = this.state.player === 1? 2: 1;
-          let turn = this.state.turn === 'white'? 'black' : 'white';
+          let turn = this.state.turn === 'red'? 'blue' : 'red';
           this.setState({
             sourceSelection: -1,
             squares: squares,

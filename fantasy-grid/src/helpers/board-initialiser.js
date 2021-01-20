@@ -1,21 +1,27 @@
+import Druid from '../pieces/druid.js';
+import Paladin from '../pieces/paladin.js';
+
 
 export default function initialiseChessBoard(){
     const squares = Array(64).fill(null);
-  /*
     for(let i = 8; i < 16; i++){
-      squares[i] = new Pawn(2);
-      squares[i+40] = new Pawn(1);
+    //  squares[i] = new Druid(2);
+    //  squares[i+40] = new Druid(1);
     }
-    squares[0] = new Rook(2);
-    squares[7] = new Rook(2);
-    squares[56] = new Rook(1);
-    squares[63] = new Rook(1);
+ 
+    squares[0] = new Paladin(2);
+    squares[7] = new Paladin(2);
+
+    squares[56] = new Paladin(1);
+    squares[63] = new Paladin(1);
+
+    squares[1] = new Druid(2);
+    squares[6] = new Druid(2);
+    squares[57] = new Druid(1);
+    squares[62] = new Druid(1);
   
-    squares[1] = new Knight(2);
-    squares[6] = new Knight(2);
-    squares[57] = new Knight(1);
-    squares[62] = new Knight(1);
-  
+  /*
+   
     squares[2] = new Bishop(2);
     squares[5] = new Bishop(2);
     squares[58] = new Bishop(1);
