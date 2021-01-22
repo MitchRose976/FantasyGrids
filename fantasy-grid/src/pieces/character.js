@@ -3,12 +3,14 @@ export default class Character {
         this.player = player;
         this.characterIdentifier = characterIdentifier;
         this.style = {backgroundColor: playerColor};
-        this.playerHP = playerHP;
+        this.characterHP = characterHP;
     }
+};
+    /*
     get characterHP() {
         return this.characterHP;
     }
     set characterHP(value) {
         this.characterHP = value;
     }
-};
+}; */
