@@ -26,28 +26,24 @@ export default class Paladin extends Character {
     getSrcToDestPath(src, dest){
       return [];
     }
-    isAttackPossible(src, dest, squares) {
+    isAttackPossible(src, dest, target,squares) {
+    if(target){
       let possibleAttackArray = [];
       possibleAttackArray.push(src + 8 === dest
                               ,src - 8 === dest
                               ,src + 1 === dest
                               ,src - 1 === dest);
-      for (let i = 0; i < possibleAttackArray.length; i++) {
-          //need to check if any of the squares in possibleAttackArray contain an enemy
-          if (possibleAttackArray[i] = squares) {
-              //if attack square is occupied by enemy, need to return the enemy character as target for attack method ex.(target = enemy.character)
-              Paladin.Attack(target); 
-          } else {
-              //end turn
-          }
+      if(possibleAttackArray.includes(dest)){
+          this.Attack(squares[dest]);
       }
-      
+    }
   }
   Attack(target) {
-      target.HP -= Paladin.attackDamage;
-      if (target.HP < 0) {
-          target.HP = 0
+      target.characterHP -= this.attackDamage;
+      if (target.characterHP < 0) {
+          target.characterHP = 0
       }
+      console.log(target.characterHP);
   } 
 };  
 
