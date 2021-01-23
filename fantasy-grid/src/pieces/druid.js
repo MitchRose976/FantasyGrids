@@ -37,7 +37,7 @@ export default class Druid extends Character {
             //need to check if any of the squares in possibleAttackArray contain an enemy
             if (possibleAttackArray[i] = squares) {
                 //if attack square is occupied by enemy, need to return the enemy character as target for attack method ex.(target = enemy.character)
-                Paladin.Attack(target); 
+               // Paladin.Attack(target); 
             } else {
                 //end turn
             }

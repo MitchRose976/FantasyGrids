@@ -16,27 +16,41 @@ export default class Game extends React.Component {
       player: 1,
       sourceSelection: -1,
       status: '',
-      turn: 'red'
+      turn: 'red',
+      turnCounter: 1,
+      actionPhase: false,
+      endTurn: false,
+      attackEvent: ''
     }
   }
  
   handleClick(i){
     const squares = this.state.squares.slice();
-    
-    if(this.state.sourceSelection === -1){
+   //Movement CODE 
+
+   // if you try to select the wrong player it notifies you 
+    if(this.state.sourceSelection === -1  && !(this.state.endTurn)){
       if(!squares[i] || squares[i].player !== this.state.player){
         this.setState({status: "Wrong selection. Choose player " + this.state.player + " pieces."});
         squares[i]? delete squares[i].style: null;
       }
-      else{
+      else if(!(this.state.actionPhase)){ //if you select the right unit, choose your destination
         squares[i].style = {...squares[i].style, backgroundColor: "RGB(111,143,114)"}; // Emerald from http://omgchess.blogspot.com/2015/09/chess-board-color-schemes.html
         this.setState({
           status: "Choose destination for the selected piece",
           sourceSelection: i
         });
       }
+      else if((this.state.actionPhase)){ //if you select the right unit, choose your destination
+        squares[i].style = {...squares[i].style, backgroundColor: "RGB(111,143,114)"}; // Emerald from http://omgchess.blogspot.com/2015/09/chess-board-color-schemes.html
+        this.setState({
+          status: "Choose appropriate target for the selected piece",
+          sourceSelection: i
+        });
+      }
     }
-
+      
+    //you choose a wrong destination or wrong source/square
     else if(this.state.sourceSelection > -1){
       delete squares[this.state.sourceSelection].style;
       if(squares[i] && squares[i].player === this.state.player){
@@ -45,7 +59,22 @@ export default class Game extends React.Component {
           sourceSelection: -1,
         });
       }
-      else{
+
+      //action phase
+       else if(this.state.actionPhase){
+        const squares = this.state.squares.slice();
+        const isDestEnemyOccupied = squares[i]? true : false; 
+        const srcToDestPath = squares[this.state.sourceSelection].getSrcToDestPath(this.state.sourceSelection, i);
+        const isAttackPossible = squares[this.state.sourceSelection].isAttackPossible(this.state.sourceSelection, i, isDestEnemyOccupied,squares);
+        if(isAttackPossible){
+          this.setState({
+            attackEvent: "Player: " + this.state.player + "'s " + squares[this.state.sourceSelection] + " attacked for " + squares[this.state.sourceSelection].attackDamage
+          })
+        }
+       }
+
+      //movement code 
+      else if(!(this.state.actionPhase)){
         
         const squares = this.state.squares.slice();
         const playerOneFallenUnits = this.state.playerOneFallenUnits.slice();
@@ -68,17 +97,17 @@ export default class Game extends React.Component {
           console.log("playerTwoFallenUnits", playerTwoFallenUnits);
           squares[i] = squares[this.state.sourceSelection];
           squares[this.state.sourceSelection] = null;
-          let player = this.state.player === 1? 2: 1;
-          let turn = this.state.turn === 'red'? 'blue' : 'red';
+          
           this.setState({
-            sourceSelection: -1,
             squares: squares,
-            playerOneFallenUnits: playerOneFallenUnits,
-            playerTwoFallenUnits: playerTwoFallenUnits,
-            player: player,
-            status: '',
-            turn: turn
-          });
+            sourceSelection: -1,
+          })
+
+             //Movement CODE 
+
+          //Action phase
+          this.actionPhaseSetter(squares[i].player,this.state.turn,squares);
+
         }
         else{
           this.setState({
@@ -106,6 +135,58 @@ export default class Game extends React.Component {
     return isLegal;
   }
 
+  /*actionPhase(){
+    this.setState({
+      sourceSelection: i
+    });
+    const squares = this.state.squares.slice();
+    const isDestEnemyOccupied = squares[i]? true : false; 
+    const srcToDestPath = squares[this.state.sourceSelection].getSrcToDestPath(this.state.sourceSelection, i);
+    const isAttackPossible = squares[this.state.sourceSelection].isAttackPossible(this.state.sourceSelection, i, isDestEnemyOccupied,squares);
+    if(isAttackPossible){
+      this.setState({
+        attackEvent: "Player: " + this.state.player + "'s " + squares[this.state.sourceSelection] + " attacked for " + squares[this.state.sourceSelection].attackDamage
+      })
+    }
+  }*/
+
+  actionPhaseSetter(){
+    console.log("action phase started");
+    this.setState({
+      actionPhase: true,
+      status: "Action phase: please select your valid unit.",
+    });
+  }
+
+  endUsersTurn(){
+    const squares = this.state.squares.slice();
+    let player = this.state.player === 1? 2: 1;
+    let turn = this.state.turn === 'red'? 'blue' : 'red';
+    let turnCounter = this.state.turnCounter;
+    const playerOneFallenUnits = this.state.playerOneFallenUnits.slice();
+    const playerTwoFallenUnits = this.state.playerTwoFallenUnits.slice();
+
+
+    this.setState({
+      endTurn: true,
+      actionPhase: false,
+      sourceSelection: -1,
+
+    });
+
+    this.setState({
+      sourceSelection: -1,
+      squares: squares,
+      playerOneFallenUnits: playerOneFallenUnits,
+      playerTwoFallenUnits: playerTwoFallenUnits,
+      player: player,
+      status: '',
+      turn: turn,
+      turnCounter: turnCounter+=1,
+      endTurn: false
+    });
+  }
+
   render() {
 
     return (
@@ -123,6 +204,13 @@ export default class Game extends React.Component {
   
             </div>
             <div className="game-status">{this.state.status}</div>
+            <div className="game-turn">Turn: {this.state.turnCounter}</div>
+            <div className="game-attck">{this.state.attackEvent}</div>
+
+            <br/>
+            <button className="end-turn"
+            onClick = {(x) => this.endUsersTurn()}
+            >End Turn</button>
             
           </div>
         </div>
